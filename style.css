@@ -1,0 +1,29 @@
+:root {
+	--widthMultiplier: 1;
+	--heightMultiplier: 1;
+}
+
+.html5-video-container {
+	height: 100%;
+}
+
+.html5-main-video {
+	max-width: calc((100vh - 56px) * var(--widthMultiplier)) !important;
+}
+
+@media only screen and (max-width: 1014px) {
+	.html5-main-video {
+		max-height: calc(100vw * var(--heightMultiplier)) !important;
+	}
+}
+
+@media only screen and (min-width: 1014px) {
+	.html5-main-video {
+		max-height: calc((100vw - 400px) * var(--heightMultiplier)) !important;
+	}
+}
+
+#player-theater-container {
+	height: 100vh !important;
+	max-height: calc(100vh - 56px) !important;
+}
