@@ -9,9 +9,15 @@
     "content_scripts": [
 		{
 			"matches": ["*://www.youtube.com/*"],
-			"js": ["app.js"],
-			"css": ["style.css"]
+			"js": ["app.js"]
 		}
+	],
+	"background": {
+        "scripts": ["background.js"]
+    },
+	"permissions": [
+		"<all_urls>",
+		"tabs"
 	],
 	"browser_specific_settings":
 		{
