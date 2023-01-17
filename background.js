@@ -1,5 +1,3 @@
-console.log("background");
-
 browser.tabs.onUpdated.addListener(() => {
 	browser.tabs.query({
     currentWindow: true,

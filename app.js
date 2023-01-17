@@ -1,32 +1,32 @@
 let playerTheater = null;
+let videoParent = null;
 let video = null;
 let chat = false;
-let vidHeight = -1;
-let vidWidth = -1;
-let inWatch = false;
+let lastURL = "";
 
 browser.runtime.onMessage.addListener((request) => {
 	if (window.location.href.toString().includes("://www.youtube.com/watch"))
 	{
-		inWatch = true;
-		waitForElementsToDisplay(function() {
-			playerTheater = document.getElementById("player-theater-container");
-			video = document.getElementById("movie_player").firstChild.firstChild;
-			vidHeight = video.videoHeight;
-			vidWidth = video.videoWidth;
-			playerTheater.style.setProperty('max-height', 'calc(100vh - 56px)', 'important');
-			playerTheater.style.setProperty('height', '100vh', 'important');
-			window.dispatchEvent(new Event('resize'));
-			window.scrollTo(0, 0);
-			waitForChatToDisplay(function() {
-				chat = true;
+		if (lastURL != window.location.href)
+		{
+			lastURL = window.location.href;
+			chat = false;
+			waitForElementsToDisplay(function() {
+				playerTheater = document.getElementById("player-theater-container");
+				videoParent = document.getElementById("movie_player");
+				video = videoParent.firstChild.firstChild;
+				playerTheater.style.setProperty('height', '100vh', 'important');
 				window.dispatchEvent(new Event('resize'));
+				waitForChatToDisplay(function() {
+					chat = true;
+					window.dispatchEvent(new Event('resize'));
+				});
+				window.scrollTo(0, 0);
 			});
-		});
+		}
 	}
 	else
 	{
-		inWatch = false;
 		playerTheater = null;
 		video = null;
 		chat = false;
@@ -41,14 +41,24 @@ window.onresize = function(event) {
 		{
 			trueWidth -= 400;
 		}
-		if ((window.innerHeight - 56) * (video.videoWidth / video.videoHeight) <= trueWidth)
+		let trueHeight = window.innerHeight;
+		if (videoParent.getAttribute('aria-label').includes("Fullscreen"))
 		{
-			video.style.setProperty('max-height', (window.innerHeight - 56).toString() + 'px', 'important');
-			video.style.setProperty('max-width', ((window.innerHeight - 56) * (vidWidth / vidHeight)).toString() + 'px', 'important');
+			playerTheater.style.setProperty('max-height', '100vh', 'important');
 		}
 		else
 		{
-			video.style.setProperty('max-height', (trueWidth * (vidHeight / vidWidth)).toString() + 'px', 'important');
+			playerTheater.style.setProperty('max-height', 'calc(100vh - 56px)', 'important');
+			trueHeight -= 56;
+		}
+		if (trueHeight * (video.videoWidth / video.videoHeight) <= trueWidth)
+		{
+			video.style.setProperty('max-height', trueHeight.toString() + 'px', 'important');
+			video.style.setProperty('max-width', (trueHeight * (video.videoWidth / video.videoHeight)).toString() + 'px', 'important');
+		}
+		else
+		{
+			video.style.setProperty('max-height', (trueWidth * (video.videoHeight / video.videoWidth)).toString() + 'px', 'important');
 			video.style.setProperty('max-width', trueWidth.toString() + 'px', 'important');
 		}
 	}
