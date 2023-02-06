@@ -3,6 +3,19 @@ let videoParent = null;
 let video = null;
 let chat = false;
 let lastURL = "";
+let fullscreen = false;
+let mutationObserver = new MutationObserver(function(mutations) {
+	if (!fullscreen && videoParent.getAttribute('aria-label').includes("Fullscreen"))
+	{
+		fullscreen = true;
+		window.dispatchEvent(new Event('resize'));
+	}
+	else if (fullscreen && !videoParent.getAttribute('aria-label').includes("Fullscreen"))
+	{
+		fullscreen = false;
+		window.dispatchEvent(new Event('resize'));
+	}
+});
 
 browser.runtime.onMessage.addListener((request) => {
 	if (window.location.href.toString().includes("://www.youtube.com/watch"))
@@ -11,9 +24,13 @@ browser.runtime.onMessage.addListener((request) => {
 		{
 			lastURL = window.location.href;
 			chat = false;
+			fullscreen = false;
 			waitForElementsToDisplay(function() {
 				playerTheater = document.getElementById("player-theater-container");
 				videoParent = document.getElementById("movie_player");
+				mutationObserver.observe(videoParent, {
+					attributes: true
+				});
 				video = videoParent.firstChild.firstChild;
 				playerTheater.style.setProperty('height', '100vh', 'important');
 				window.dispatchEvent(new Event('resize'));
@@ -42,7 +59,7 @@ window.onresize = function(event) {
 			trueWidth -= 400;
 		}
 		let trueHeight = window.innerHeight;
-		if (videoParent.getAttribute('aria-label').includes("Fullscreen"))
+		if (fullscreen)
 		{
 			playerTheater.style.setProperty('max-height', '100vh', 'important');
 		}
