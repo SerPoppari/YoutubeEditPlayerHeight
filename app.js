@@ -24,6 +24,7 @@ browser.runtime.onMessage.addListener((request) => {
 				playerTheater = document.getElementById("player-theater-container");
 				videoParent = document.getElementById("movie_player");
 				playerTheater.style.setProperty('max-height', 'calc(100vh - 56px)', 'important');
+				window.dispatchEvent(new Event('resize'));
 				mutationObserver.observe(videoParent, {
 					attributes: true
 				});
