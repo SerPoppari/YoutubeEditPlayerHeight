@@ -3,12 +3,14 @@ let videoParent = null;
 let lastURL = "";
 
 let mutationObserver = new MutationObserver(function(mutations) {
-	if (!fullscreen && videoParent.getAttribute('aria-label').includes("Full screen"))
+	if (!fullscreen && (videoParent.getAttribute('aria-label').includes("Full screen") ||
+						videoParent.getAttribute('aria-label').includes("Fullscreen")))
 	{
 		fullscreen = true;
 		playerTheater.style.setProperty('max-height', '100vh', 'important');
 	}
-	else if (fullscreen && !videoParent.getAttribute('aria-label').includes("Full screen"))
+	else if (fullscreen && (!videoParent.getAttribute('aria-label').includes("Full screen") &&
+							!videoParent.getAttribute('aria-label').includes("Fullscreen")))
 	{
 		fullscreen = false;
 		playerTheater.style.setProperty('max-height', 'calc(100vh - 56px)', 'important');
