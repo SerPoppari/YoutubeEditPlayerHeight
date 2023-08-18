@@ -25,7 +25,7 @@ browser.runtime.onMessage.addListener((request) => {
 			lastURL = window.location.href;
 			fullscreen = false;
 			waitForElementsToDisplay(function() {
-				playerTheater = document.getElementById("player-wide-container");
+				playerTheater = document.getElementById("player-full-bleed-container");
 				videoParent = document.getElementById("movie_player");
 				playerTheater.style.setProperty('max-height', 'calc(100vh - 56px)', 'important');
 				window.dispatchEvent(new Event('resize'));
@@ -39,7 +39,7 @@ browser.runtime.onMessage.addListener((request) => {
 
 function waitForElementsToDisplay(callback) {
   (function loopSearch() {
-    if (document.getElementById("player-wide-container") != null
+    if (document.getElementById("player-full-bleed-container") != null
 	&& document.getElementById("movie_player") != null) {
       callback();
       return;
