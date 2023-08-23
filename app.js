@@ -25,7 +25,7 @@ browser.runtime.onMessage.addListener((request) => {
 			lastURL = window.location.href;
 			fullscreen = false;
 			waitForElementsToDisplay(function() {
-				playerTheater = document.getElementById("player-full-bleed-container");
+				playerTheater = document.getElementById("full-bleed-container");
 				videoParent = document.getElementById("movie_player");
 				playerTheater.style.setProperty('max-height', 'calc(100vh - 56px)', 'important');
 				window.dispatchEvent(new Event('resize'));
@@ -39,9 +39,22 @@ browser.runtime.onMessage.addListener((request) => {
 
 function waitForElementsToDisplay(callback) {
   (function loopSearch() {
-    if (document.getElementById("player-full-bleed-container") != null
+    if (document.getElementById("full-bleed-container") != null
 	&& document.getElementById("movie_player") != null) {
+		waitForChatToDisplay();
       callback();
+      return;
+    }
+    else {
+      setTimeout(function() { loopSearch(); }, 1000);
+    }
+  })();
+}
+
+function waitForChatToDisplay() {
+  (function loopSearch() {
+    if (document.getElementById("chat")) {
+      window.dispatchEvent(new Event('resize'));
       return;
     }
     else {
